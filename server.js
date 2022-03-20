@@ -6,8 +6,6 @@ const express = require('express');
 
 const weatherData = require('./data/weather.json');
 
-console.log(weatherData);
-
 const cors = require('cors');
 const { describe } = require('eslint/lib/rule-tester/rule-tester');
 
@@ -17,28 +15,36 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3002;
 
-console.log(process.env.PORT);
-
 class Forecast {
     constructor(weatherData) {
-        this.description = `Low of ${weatherData.low_temp}. High of ${weatherData.high_temp}. With a chance of ${weatherData.weather.description}`;
+        this.description = `${weatherData.datetime}: Low of ${weatherData.low_temp}. High of ${weatherData.high_temp}. With a chance of ${weatherData.weather.description}`;
         this.date = weatherData.datetime;
     }
 }
 
 app.get('/weather', (req, res, next) => {
     try {
-        const query = req.query.type;
+        const lat = parseInt(req.query.lat);
+        const lon = parseInt(req.query.lon);
         const weather = weatherData.find(value => {
-            return parseInt(value.lat) === parseInt(query[0]);
+            return parseInt(value.lat) === lat
+                && parseInt(value.lon) === lon;
         });
-        const forecastArr = weather.data.map(value => {
-            return new Forecast(value);
-        });
-        res.send(forecastArr);
+        if (weather) {
+            const forecastArr = weather.data.map(value => {
+                return new Forecast(value);
+            });
+            res.send(forecastArr);
+        } else {
+            throw 'error';
+        }
     } catch (e) {
         res.send(e.message);
     }
+});
+
+app.get('/', (req, res, next) => {
+    res.send('Server is live');
 });
 
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
