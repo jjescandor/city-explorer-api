@@ -7,7 +7,6 @@ const express = require('express');
 const weatherData = require('./data/weather.json');
 
 const cors = require('cors');
-const { describe } = require('eslint/lib/rule-tester/rule-tester');
 
 const app = express();
 
@@ -17,8 +16,18 @@ const PORT = process.env.PORT || 3002;
 
 class Forecast {
     constructor(weatherData) {
-        this.description = `${weatherData.datetime}: Low of ${weatherData.low_temp}. High of ${weatherData.high_temp}. With a chance of ${weatherData.weather.description}`;
+        this.description = `Low of ${weatherData.low_temp}. High of ${weatherData.high_temp}. With a chance of ${weatherData.weather.description}`;
         this.date = weatherData.datetime;
+        this.type = this.weatherType();
+    }
+    weatherType() {
+        if (this.description.includes('sun')) {
+            return 'sun';
+        } else if (this.description.includes('rain')) {
+            return 'rain';
+        } else if (this.description.includes('cloud')) {
+            return 'cloud';
+        }
     }
 }
 
