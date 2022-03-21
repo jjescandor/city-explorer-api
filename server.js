@@ -27,6 +27,8 @@ class Forecast {
             return 'rain';
         } else if (this.description.includes('cloud')) {
             return 'cloud';
+        } else if (this.description.includes('thunder')) {
+            return 'thunder';
         }
     }
 }
