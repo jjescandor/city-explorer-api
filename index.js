@@ -6,6 +6,7 @@ const express = require('express');
 
 const weatherData = require('./data/weather.json');
 
+const axios = require('axios');
 
 const cors = require('cors');
 
@@ -13,7 +14,7 @@ const app = express();
 
 app.use(cors());
 
-const PORT = process.env.PORT || 3002;
+const PORT = 3003;
 
 class Forecast {
     static monthArr = ['January', 'February', 'March',
@@ -21,29 +22,29 @@ class Forecast {
         'October', 'November', 'December'];
 
     constructor(weatherData) {
-        this.description = `Low of ${weatherData.low_temp} \u2109. High of ${weatherData.high_temp} \u2109. With a chance of ${weatherData.weather.description}`;
-        this.date = Forecast.formatDate(weatherData.datetime);
-        this.type = Forecast.weatherType(this.description);
+        this.description = `Low of ${weatherData.low_temp}. High of ${weatherData.high_temp}. With a chance of ${weatherData.weather.description}`;
+        this.date = this.formatDate(weatherData.datetime);
+        this.type = this.weatherType();
     }
-    static weatherType(description) {
-        if (/sun/i.test(description)) {
+    weatherType() {
+        if (/sun/i.test(this.description)) {
             return 'sun';
-        } else if (/rain/i.test(description)) {
+        } else if (/rain/i.test(this.description)) {
             return 'rain';
-        } else if (/cloud/i.test(description)) {
+        } else if (/cloud/i.test(this.description)) {
             return 'cloud';
-        } else if (/thunder/i.test(description)) {
+        } else if (/thunder/i.test(this.description)) {
             return 'thunder';
         }
     }
-    static formatDate(date) {
+    formatDate(date) {
         const dateArr = date.split('-');
         const year = dateArr[0];
-        const month = Forecast.findMonth(dateArr[1]);
+        const month = this.findMonth(dateArr[1]);
         const day = dateArr[2];
         return `${month} ${day}, ${year}`;
     }
-    static findMonth(month) {
+    findMonth(month) {
         for (let i = 1; i <= 12; i++) {
             if (i == month) {
                 return Forecast.monthArr[i];
@@ -52,30 +53,38 @@ class Forecast {
     }
 }
 
-app.get('/weather', (req, res, next) => {
+const getWeather = async () => {
+    const url = ``;
+    return url;
+}
+
+const getMovies = async () => {
+    const url = ``;
+    return url;
+}
+
+
+
+app.get('/weather', (req, res) => {
     try {
         const lat = parseInt(req.query.lat);
         const lon = parseInt(req.query.lon);
         const search = new RegExp(req.query.search, 'i');
-        const weather = weatherData.find(value => {
-            return search.test(value.city_name)
-                || (lat === parseInt(value.lat) && lon === parseInt(value.lon))
-        });
+        const weather = getWeather();
         if (weather) {
             const forecastArr = weather.data.map(value => {
                 return new Forecast(value);
             });
             res.send(forecastArr);
         } else {
-            throw 'city not found';
+            throw 'error';
         }
     } catch (e) {
-        console.log(e.message);
         res.send(e.message);
     }
 });
 
-app.get('/', (req, res, next) => {
+app.get('/movies', (req, res) => {
     res.send('Server is live');
 });
 
