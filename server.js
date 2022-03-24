@@ -4,10 +4,8 @@ require('dotenv').config();
 
 const express = require('express');
 
-//const weatherData = require('./data/weather.json');
-
-
 const cors = require('cors');
+
 const { default: axios } = require('axios');
 
 const app = express();
@@ -27,7 +25,7 @@ const formatDate = (date) => {
     return `${month} ${day}, ${year}`;
 }
 const findMonth = (month) => {
-    for (let i = 1; i <= monthArr.length + 1; i++) {
+    for (let i = 1; i < monthArr.length + 1; i++) {
         if (i == month) {
             return monthArr[i];
         }
@@ -43,14 +41,16 @@ class Forecast {
     static weatherType(description) {
         if (/sun/i.test(description)) {
             return 'sun';
+        } else if (/clear/i.test(description)) {
+            return 'clear';
         } else if (/rain/i.test(description)) {
             return 'rain';
         } else if (/cloud/i.test(description)) {
             return 'cloud';
         } else if (/thunder/i.test(description)) {
             return 'thunder';
-        } else if (/clear/i.test(description)) {
-            return 'clear';
+        } else if (/snow/i.test(description) || /flurr/i.test(description)) {
+            return 'snow';
         }
     }
 }
@@ -71,12 +71,9 @@ const findWeatherForecast = async (req, res) => {
     const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
     const weatherData = await axios.get(url);
     const weather = weatherData.data.data.slice(0, 7);
-    console.log(weather.data);
     try {
         if (weather) {
-            const forecastArr = weather.map(value => {
-                return new Forecast(value);
-            });
+            const forecastArr = weather.map(value => new Forecast(value));
             res.send(forecastArr);
         } else {
             throw 'city not found';
