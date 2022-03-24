@@ -36,7 +36,7 @@ const findMonth = (month) => {
 
 class Forecast {
     constructor(weatherData) {
-        this.description = `Low of ${weatherData.temp} \u2109. Temp ${weatherData.temp} \u2109. ${weatherData.weather.description}`;
+        this.description = `Low of ${weatherData.low_temp} \u2109. High of ${weatherData.max_temp} \u2109. ${weatherData.weather.description}`;
         this.date = formatDate(weatherData.datetime);
         this.type = Forecast.weatherType(this.description);
     }
@@ -69,6 +69,7 @@ const findWeatherForecast = async (req, res) => {
     const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
     const weatherData = await axios.get(url);
     const weather = weatherData.data.data.slice(0, 7);
+    console.log(weather.data.data);
     try {
         if (weather) {
             const forecastArr = weather.map(value => {
