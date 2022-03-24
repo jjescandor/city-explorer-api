@@ -63,7 +63,7 @@ class Movies {
     }
 }
 
-const findWeatherForecast = async (req, res, next) => {
+const findWeatherForecast = async (req, res) => {
     const lat = req.query.lat;
     const lon = req.query.lon;
     const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
@@ -87,7 +87,7 @@ const findWeatherForecast = async (req, res, next) => {
 app.get('/weather', findWeatherForecast);
 
 
-const findMovies = async (req, res, next) => {
+const findMovies = async (req, res) => {
     const movieQuery = req.query.query;
     const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&query=${movieQuery}&page=1`;
     const movies = await axios.get(url);
@@ -99,7 +99,7 @@ const findMovies = async (req, res, next) => {
 app.get('/movies', findMovies);
 
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
     res.send('Server is live');
 });
 
