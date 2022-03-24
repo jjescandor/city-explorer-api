@@ -36,7 +36,7 @@ const findMonth = (month) => {
 
 class Forecast {
     constructor(weatherData) {
-        this.description = `Low of ${weatherData.low_temp} ℃;. High of ${weatherData.max_temp} ℃. ${weatherData.weather.description}`;
+        this.description = `Low of ${weatherData.low_temp} ℃.  High of ${weatherData.max_temp} ℃.  ${weatherData.weather.description}`;
         this.date = formatDate(weatherData.datetime);
         this.type = Forecast.weatherType(this.description);
     }
