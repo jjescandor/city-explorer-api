@@ -103,7 +103,7 @@ app.get('/', (req, res) => {
     res.send('Server is live');
 });
 
-app.listen(3001, () => console.log(`listening on PORT ${PORT}`));
+app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
 
 
 
