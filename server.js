@@ -16,7 +16,7 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3002;
 
-const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+const monthArr = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
 
 const formatDate = (date) => {
@@ -27,7 +27,7 @@ const formatDate = (date) => {
     return `${month} ${day}, ${year}`;
 }
 const findMonth = (month) => {
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= monthArr.length + 1; i++) {
         if (i == month) {
             return monthArr[i];
         }
@@ -36,7 +36,7 @@ const findMonth = (month) => {
 
 class Forecast {
     constructor(weatherData) {
-        this.description = `Low of ${weatherData.low_temp} \u2109. High of ${weatherData.max_temp} \u2109. ${weatherData.weather.description}`;
+        this.description = `Low of ${weatherData.low_temp} ℃;. High of ${weatherData.max_temp} ℃. ${weatherData.weather.description}`;
         this.date = formatDate(weatherData.datetime);
         this.type = Forecast.weatherType(this.description);
     }
@@ -49,6 +49,8 @@ class Forecast {
             return 'cloud';
         } else if (/thunder/i.test(description)) {
             return 'thunder';
+        } else if (/clear/i.test(description)) {
+            return 'clear';
         }
     }
 }
@@ -69,7 +71,7 @@ const findWeatherForecast = async (req, res) => {
     const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
     const weatherData = await axios.get(url);
     const weather = weatherData.data.data.slice(0, 7);
-    console.log(weather.data.data);
+    console.log(weather.data);
     try {
         if (weather) {
             const forecastArr = weather.map(value => {
