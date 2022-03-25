@@ -18,10 +18,10 @@ const monthArr = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'J
     'August', 'September', 'October', 'November', 'December'];
 
 const formatDate = (date) => {
-    const dateArr = date.split('-');
-    const year = dateArr[0];
-    const month = findMonth(dateArr[1]);
-    const day = dateArr[2];
+    const { yr, mo, dy } = date.split('-');
+    const year = yr;
+    const month = findMonth(mo);
+    const day = dy;
     return `${month} ${day}, ${year}`;
 }
 const findMonth = (month) => {
@@ -93,7 +93,7 @@ const findMovies = async (req, res) => {
         const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&query=${movieQuery}&page=1`;
         const movies = await axios.get(url);
         const movieResults = movies.data.results.slice(0, 10).map(value => new Movies(value));
-        res.send(movieResults);
+        res.status(200).send(movieResults);
     } catch (e) {
         res.send(e.message);
     }
