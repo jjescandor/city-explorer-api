@@ -59,7 +59,7 @@ class Movies {
     constructor(movieData) {
         this.title = movieData.original_title;
         this.overview = movieData.overview;
-        this.img_url = movieData.backdrop_path;
+        this.img_url = `https://image.tmdb.org/t/p/w500${movieData.backdrop_path}`;
         this.rating = movieData.vote_average;
         this.release_date = formatDate(movieData.release_date);
     }
@@ -74,7 +74,7 @@ const findWeatherForecast = async (req, res) => {
     try {
         if (weather) {
             const forecastArr = weather.map(value => new Forecast(value));
-            res.send(forecastArr);
+            res.status(200).send(forecastArr);
         } else {
             throw 'city not found';
         }
