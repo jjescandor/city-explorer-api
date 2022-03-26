@@ -1,4 +1,6 @@
 /* eslint-disable indent */
+const { default: axios } = require('axios');
+
 const formatDate = require('./date.js');
 
 class Movies {
@@ -11,4 +13,16 @@ class Movies {
     }
 }
 
-module.exports = Movies;
+const findMovies = async (req, res) => {
+    try {
+        const { query } = req.query;
+        const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&query=${query}&page=1`;
+        const movies = await axios.get(url);
+        const movieResults = movies.data.results.slice(0, 10).map(value => new Movies(value));
+        res.status(200).send(movieResults);
+    } catch (e) {
+        res.send(e.message);
+    }
+};
+
+module.exports = findMovies;
