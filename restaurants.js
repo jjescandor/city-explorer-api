@@ -8,7 +8,7 @@ class Restaurants {
         this.link = restaurant.url;
         this.categories = restaurant.categories;
         this.rating = restaurant.rating;
-        this.address = restaurant.location.display_address.;
+        this.address = restaurant.location.display_address;
         this.phone = restaurant.display_phone;
     }
 }
