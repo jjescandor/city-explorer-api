@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const express = require('express');
 
+const findRestaurants = require('./restaurants.js');
+
 const cors = require('cors');
 
 const app = express();
@@ -20,6 +22,8 @@ const findMovies = require('./movie.js');
 app.get('/weather', findWeatherForecast);
 
 app.get('/movies', findMovies);
+
+app.get('/restaurants', findRestaurants);
 
 app.get('/', (req, res) => {
     res.send('Server is live');
