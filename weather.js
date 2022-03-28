@@ -9,7 +9,7 @@ class Forecast {
         this.description = `Low of ${weatherData.low_temp} ℃.  High of ${weatherData.max_temp} ℃.  ${weatherData.weather.description}`;
         this.date = formatDate(weatherData.datetime);
         this.type = this.description;
-        this.icon = `https://www.weatherbit.io/static/img/${weatherData.weather.icon}.png`;
+        this.icon = `https://www.weatherbit.io/static/img/icons/${weatherData.weather.icon}.png`;
     }
 }
 
