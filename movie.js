@@ -8,6 +8,7 @@ class Movies {
         this.title = movieData.original_title;
         this.overview = movieData.overview;
         this.img_url = `https://image.tmdb.org/t/p/w500${movieData.backdrop_path}`;
+        this.poster = `https://image.tmdb.org/t/p/w500${movieData.poster}`;
         this.rating = movieData.vote_average;
         this.release_date = formatDate(movieData.release_date);
     }
