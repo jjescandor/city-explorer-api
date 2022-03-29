@@ -12,11 +12,8 @@ class Restaurants {
         this.phone = restaurant.display_phone;
     }
     static formatAddress(arr) {
-        let address = '';
-        for (let a in arr) {
-            address += ` ${a}`;
-        }
-        return address;
+        let { add1, add2, add3 } = arr;
+        return `${add1} ${add2} ${add3}`;
     }
 }
 
