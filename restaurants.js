@@ -8,12 +8,8 @@ class Restaurants {
         this.link = restaurant.url;
         this.categories = restaurant.categories;
         this.rating = parseInt(restaurant.rating);
-        this.address = Restaurants.formatAddress(restaurant.location.display_address);
+        this.address = restaurant.location.display_address;
         this.phone = restaurant.display_phone;
-    }
-    static formatAddress(arr) {
-        let { add1, add2, add3 } = arr;
-        return `${add1} ${add2} ${add3}`;
     }
 }
 
