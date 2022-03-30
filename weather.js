@@ -2,7 +2,7 @@
 
 const { default: axios } = require('axios');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache({ stdTTL: 36000 });
+const myCache = new NodeCache({ stdTTL: 3600 });
 const formatDate = require('./date.js');
 
 class Forecast {
@@ -11,8 +11,13 @@ class Forecast {
         this.date = formatDate(weatherData.datetime);
         this.type = this.description;
         this.icon = `https://www.weatherbit.io/static/img/icons/${weatherData.weather.icon}.png`;
-        this.date = Date.now();
+        this.date = convertDate(Date.now());
     }
+}
+
+function convertDate(rawDate) {
+    const date = new Date(rawDate);
+    return date.toString();
 }
 
 const findWeatherForecast = async (req, res) => {
