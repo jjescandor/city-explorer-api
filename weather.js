@@ -2,8 +2,7 @@
 
 const { default: axios } = require('axios');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache({ stdTTL: 3600 });
-
+const myCache = new NodeCache({ stdTTL: 36000 });
 const formatDate = require('./date.js');
 
 class Forecast {
@@ -12,29 +11,32 @@ class Forecast {
         this.date = formatDate(weatherData.datetime);
         this.type = this.description;
         this.icon = `https://www.weatherbit.io/static/img/icons/${weatherData.weather.icon}.png`;
+        this.date = Date.now();
     }
 }
 
 const findWeatherForecast = async (req, res) => {
     const { lat, lon } = req.query;
     if (myCache.has(lat + lon)) {
-        const weatherCont = myCache.get(lat + lon);
-        const forecastArr = weatherCont.map(value => new Forecast(value));
+        const forecastArr = myCache.get(lat + lon);
+        console.log('cache-hit');
         res.status(200).send(forecastArr);
-    }
-    const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
-    const weatherData = await axios.get(url);
-    const weatherCont = weatherData.data.data.slice(0, 7);
-    try {
-        if (weatherCont) {
-            myCache.set(lat, weatherCont);
-            const forecastArr = weatherCont.map(value => new Forecast(value));
-            res.status(200).send(forecastArr);
-        } else {
-            throw 'city not found';
+    } else {
+        const url = `http://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
+        const weatherData = await axios.get(url);
+        const weatherCont = weatherData.data.data.slice(0, 7);
+        try {
+            if (weatherCont) {
+                const forecastArr = weatherCont.map(value => new Forecast(value));
+                myCache.set(lat + lon, forecastArr);
+                console.log('cache-nohit');
+                res.status(200).send(forecastArr);
+            } else {
+                throw 'city not found';
+            }
+        } catch (e) {
+            res.send(e.message);
         }
-    } catch (e) {
-        res.send(e.message);
     }
 };
 

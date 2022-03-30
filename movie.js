@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 const { default: axios } = require('axios');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache({ stdTTL: 3600 });
+const myCache = new NodeCache({ stdTTL: 36000 });
 const formatDate = require('./date.js');
 
 class Movies {
@@ -19,15 +19,16 @@ const findMovies = async (req, res) => {
     try {
         const { query } = req.query;
         if (myCache.has(query)) {
-            const movies = myCache.get(query);
-            const movieResults = movies.map(value => new Movies(value));
+            const moviesArr = myCache.get(query);
+            console.log('cache-hit');
+            res.status(200).send(moviesArr);
+        } else {
+            const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&query=${query}&page=1`;
+            const movies = await axios.get(url);
+            const movieResults = movies.data.results.slice(0, 10).map(value => new Movies(value));
+            myCache.set(query, movieResults);
             res.status(200).send(movieResults);
         }
-        const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_API_KEY}&language=en-US&query=${query}&page=1`;
-        const movies = await axios.get(url);
-        myCache.set(query, movies.data.results.slice(0, 10));
-        const movieResults = movies.data.results.slice(0, 10).map(value => new Movies(value));
-        res.status(200).send(movieResults);
     } catch (e) {
         res.send(e.message);
     }
