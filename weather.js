@@ -11,7 +11,7 @@ class Forecast {
         this.date = formatDate(weatherData.datetime);
         this.type = this.description;
         this.icon = `https://www.weatherbit.io/static/img/icons/${weatherData.weather.icon}.png`;
-        this.date = convertDate(Date.now());
+        this.sourceDate = convertDate(Date.now());
     }
 }
 
