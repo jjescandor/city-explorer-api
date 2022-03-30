@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 const { default: axios } = require('axios');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache({ stdTTL: 36000 });
+const myCache = new NodeCache({ stdTTL: 360 });
 const formatDate = require('./date.js');
 
 class Movies {

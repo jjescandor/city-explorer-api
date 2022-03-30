@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 const { default: axios } = require('axios');
 const NodeCache = require('node-cache');
-const myCache = new NodeCache({ stdTTL: 3600 });
+const myCache = new NodeCache({ stdTTL: 300 });
 
 class Restaurants {
     constructor(restaurant) {
